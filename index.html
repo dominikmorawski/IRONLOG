@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101114">
+<title>IRONLOG · PUSH / PULL</title>
+<style>
+:root{color-scheme:dark;--bg:#101114;--panel:#191a1f;--panel2:#202127;--line:#303139;--muted:#9b9da8;--text:#f4f4f6;--accent:#c6f36a;--red:#ff7c7c;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{max-width:1120px;margin:auto;padding:22px 18px 100px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{font-size:13px;letter-spacing:.16em;font-weight:800}.brand span{color:var(--accent)}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:12px}
+h1{font-size:clamp(29px,5vw,44px);letter-spacing:-.04em;line-height:1.05;margin:10px 0}h2{font-size:21px;letter-spacing:-.02em;margin:0 0 12px}h3{font-size:16px;margin:0}.sub{color:var(--muted);margin:0 0 22px}.tabs{display:flex;gap:8px;margin:22px 0}.tab,.btn{border-radius:12px;padding:11px 15px;background:var(--panel2);color:var(--text);font-weight:700}.tab.active,.btn.primary{background:var(--accent);color:#151710}.btn.ghost{background:transparent;border:1px solid var(--line)}.btn.small{padding:7px 10px;font-size:12px}.btn.danger{color:var(--red);border:1px solid #573434;background:transparent}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,.8fr);gap:16px}.stack{display:grid;gap:14px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}.muted{color:var(--muted)}.tiny{font-size:12px;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:var(--panel2);padding:13px;border-radius:14px}.stat strong{display:block;font-size:25px;letter-spacing:-.04em}.stat span{font-size:11px;color:var(--muted)}
+.exercise{border:1px solid var(--line);border-radius:15px;padding:15px;margin-top:10px;background:#16171b}.exercise-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.ex-name{font-weight:750}.ex-meta{font-size:12px;color:var(--muted);margin-top:4px}.suggestion{font-size:12px;color:var(--accent);margin:11px 0 8px}.sets{display:grid;gap:7px}.set-row{display:grid;grid-template-columns:30px minmax(60px,1fr) minmax(60px,1fr) 38px;gap:7px;align-items:center}.set-num{font-size:12px;color:var(--muted);text-align:center}.field{width:100%;min-width:0;background:#101114;border:1px solid var(--line);border-radius:9px;padding:9px;color:var(--text)}.field::placeholder{color:#666873}.field-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:0 0 5px}.check{width:36px;height:36px;border-radius:10px;background:var(--panel2);color:var(--muted);font-weight:900}.check.done{background:var(--accent);color:#151710}.add-set{margin-top:8px}.exercise-footer{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px}
+.big-time{font-size:42px;font-weight:800;letter-spacing:-.05em;margin:6px 0}.timer-controls{display:flex;gap:7px;flex-wrap:wrap}.history-item{padding:12px 0;border-bottom:1px solid var(--line)}.history-item:last-child{border-bottom:0}.history-title{display:flex;justify-content:space-between;gap:8px;font-weight:700}.empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:13px}.chart-wrap{height:220px;margin-top:8px}.chart-wrap canvas{width:100%;height:100%}.record{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.record:last-child{border:0}.record strong{color:var(--accent)}.hidden{display:none!important}.footer-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.notice{font-size:12px;color:var(--muted);margin-top:10px}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent);color:#151710;padding:11px 16px;border-radius:12px;font-weight:700;box-shadow:0 8px 30px #0008;z-index:10}.date-line{font-size:12px;color:var(--muted)}.split{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media(max-width:760px){.app{padding:17px 12px 90px}.grid{grid-template-columns:1fr}.panel{padding:15px}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:22px}.top{margin-bottom:18px}.set-row{grid-template-columns:25px minmax(50px,1fr) minmax(50px,1fr) 36px}.tabs{margin:18px 0}.tabs .tab{flex:1}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">IRON<span>LOG</span> <span style="color:var(--muted);font-weight:500">/ TRAINING SYSTEM</span></div><div class="pill">LOCAL MODE · v0.1</div></header>
+<section>
+  <div class="tiny">TWÓJ TRENING. TWOJE DANE.</div>
+  <h1>Buduj progres.<br><span style="color:var(--accent)">Seria po serii.</span></h1>
+  <p class="sub">Rejestruj wyniki, porównuj treningi i podejmuj decyzje na podstawie danych.</p>
+</section>
+<div class="stats" id="stats">
+  <div class="stat"><strong id="statWorkouts">0</strong><span>ZAPISANE TRENINGI</span></div>
+  <div class="stat"><strong id="statSets">0</strong><span>WYKONANE SERIE</span></div>
+  <div class="stat"><strong id="statRecords">0</strong><span>REKORDY ĆWICZEŃ</span></div>
+</div>
+<nav class="tabs"><button class="tab active" data-tab="train">Trening</button><button class="tab" data-tab="progress">Progres</button><button class="tab" data-tab="history">Historia</button></nav>
+<main id="trainView">
+  <div class="split" style="justify-content:space-between;margin-bottom:14px">
+    <div><div class="tiny">AKTYWNY PLAN</div><h2 id="workoutTitle">PUSH</h2></div>
+    <div class="split"><button class="tab active" id="pushBtn">PUSH</button><button class="tab" id="pullBtn">PULL</button></div>
+  </div>
+  <div class="grid">
+    <section class="panel">
+      <div class="section-head"><div><h2>Ćwiczenia</h2><div class="tiny" id="workoutSubtitle">6 ćwiczeń · serie robocze</div></div><button class="btn small ghost" id="resetSession">Wyczyść sesję</button></div>
+      <div id="exerciseList"></div>
+      <div class="footer-actions"><button class="btn primary" id="finishWorkout">Zapisz trening</button><button class="btn ghost" id="exportCsv">Eksport CSV</button></div>
+      <p class="notice">Wyniki sesji są zapisywane lokalnie w tej przeglądarce. Eksportuj kopię, aby przenieść dane na inne urządzenie.</p>
+    </section>
+    <aside class="stack">
+      <section class="panel">
+        <div class="section-head"><div><div class="tiny">ODLICZANIE</div><h2>Przerwa między seriami</h2></div><span class="pill">TIMER</span></div>
+        <div class="big-time" id="timerDisplay">01:30</div>
+        <div class="timer-controls"><button class="btn primary" id="timerStart">Start</button><button class="btn ghost" id="timerReset">Reset</button><button class="btn small ghost" data-seconds="60">60 s</button><button class="btn small ghost" data-seconds="90">90 s</button><button class="btn small ghost" data-seconds="120">120 s</button></div>
+        <p class="notice">Timer działa, gdy karta aplikacji jest otwarta.</p>
+      </section>
+      <section class="panel"><div class="section-head"><h2>Ostatni trening</h2></div><div id="lastWorkout" class="empty">Brak zapisanych treningów. Zrób pierwszą sesję!</div></section>
+      <section class="panel"><div class="section-head"><h2>Kopia zapasowa</h2></div><div class="stack"><button class="btn ghost" id="exportJson">Pobierz kopię JSON</button><label class="btn ghost" style="text-align:center">Importuj kopię JSON<input id="importJson" type="file" accept="application/json" class="hidden"></label></div><p class="notice">Import zastępuje aktualne dane. Przed importem pobierz kopię obecnej historii.</p></section>
+    </aside>
+  </div>
+</main>
+<main id="progressView" class="hidden">
+  <div class="grid">
+    <section class="panel"><div class="section-head"><div><h2>Progres ćwiczenia</h2><div class="tiny">Najlepszy ciężar z każdej zapisanej sesji</div></div></div><select id="chartExercise" class="field"></select><div class="chart-wrap"><canvas id="progressChart"></canvas></div><p class="notice">Wykres pokazuje najwyższy zapisany ciężar dla wybranego ćwiczenia. Brak punktów oznacza, że ćwiczenie nie ma jeszcze historii.</p></section>
+    <section class="panel"><div class="section-head"><h2>Rekordy osobiste</h2></div><div id="recordsList"></div></section>
+  </div>
+</main>
+<main id="historyView" class="hidden">
+  <section class="panel"><div class="section-head"><div><h2>Historia treningów</h2><div class="tiny">Wszystkie zapisane sesje na tym urządzeniu</div></div><button class="btn small ghost" id="historyExport">Eksport JSON</button></div><div id="historyList"></div></section>
+</main>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const PLANS={
+ PUSH:[
+  {id:"warmup_push",name:"Rozgrzewka ogólna",sets:2,min:15,max:15,rest:60,warmup:true,details:"Bieżnia lub orbitrek 5–10 min, mobilizacja obręczy barkowej, rotacje z gumą 2 × 15 na ruch."},
+  {id:"incline_machine",name:"Wyciskanie na maszynie na górę klatki",sets:3,min:8,max:10,rest:105},
+  {id:"bench_press",name:"Wyciskanie sztangi leżąc",sets:3,min:7,max:10,rest:150},
+  {id:"machine_fly",name:"Rozpiętki na maszynie",sets:3,min:12,max:15,rest:70},
+  {id:"overhead_press",name:"Wyciskanie żołnierskie stojąc",sets:3,min:7,max:10,rest:120},
+  {id:"upright_row",name:"Podciąganie sztangi do brody szerokim chwytem",sets:3,min:10,max:12,rest:85,details:"Prowadź łokcie na boki, bez szarpania. Nie ciągnij wyżej, niż pozwala komfort barków."},
+  {id:"triceps_rope",name:"Prostowanie ramion na wyciągu, sznur zza głowy",sets:3,min:10,max:15,rest:75}
+ ],
+ PULL:[
+  {id:"warmup_pull",name:"Rozgrzewka ogólna",sets:2,min:8,max:10,rest:60,warmup:true,details:"Orbitrek 5–10 min, mobilizacja bioder i obręczy barkowej, Dead Bug 2 × 8–10 na stronę."},
+  {id:"deadlift",name:"Martwy ciąg",sets:3,min:6,max:8,rest:150,details:"Przed seriami roboczymi: 1 lekka seria × 6–8 oraz 1 średnia seria × 3–5. Serie wstępne nie są seriami roboczymi."},
+  {id:"barbell_row",name:"Wiosłowanie sztangą w pochyleniu",sets:3,min:8,max:10,rest:120,details:"Priorytet: grubość pleców. Jeśli po martwym ciągu nadmiernie obciąża dolne plecy, rozważ wiosłowanie z podparciem klatki."},
+  {id:"lat_pulldown",name:"Ściąganie drążka z góry szerokim chwytem",sets:3,min:8,max:10,rest:85,details:"Priorytet: szerokość pleców."},
+  {id:"seated_row",name:"Wiosłowanie na dolnym wyciągu szerokim chwytem",sets:3,min:10,max:12,rest:85,details:"Kontrolowane rozciągnięcie i mocne ściągnięcie łopatek."},
+  {id:"face_pull",name:"Face Pull",sets:3,min:12,max:15,rest:60,details:"Kontrolowany ruch, bez bujania."},
+  {id:"preacher_curl",name:"Uginanie przedramion na modlitewniku maszynowym",sets:3,min:8,max:12,rest:75}
+ ]}
+const KEY="ironlog-v01-data";
+let data=loadData(),currentPlan="PUSH",session={},timerSeconds=90,timerInterval=null,timerEnd=null;
+function loadData(){try{return JSON.parse(localStorage.getItem(KEY))||{workouts:[]}}catch(e){return{workouts:[]}}}
+function persist(){localStorage.setItem(KEY,JSON.stringify(data));renderStats();renderLastWorkout();renderRecords();renderHistory();populateChartSelect()}
+function saveDownload(filename,content,type){const a=document.createElement("a"),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function dateText(d){return new Date(d).toLocaleString("pl-PL",{dateStyle:"medium",timeStyle:"short"})}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");setTimeout(()=>t.classList.add("hidden"),2300)}
+function latestFor(id){for(const w of data.workouts){const ex=w.exercises.find(e=>e.id===id);if(ex)return ex}return null}
+function suggest(ex){const prev=latestFor(ex.id);if(!prev||!prev.sets?.length)return "Sugestia: rozpocznij od ciężaru, który pozwala zachować technikę i 1–2 powtórzenia w zapasie.";
+ const valid=prev.sets.filter(s=>s.done&&Number(s.weight)>=0&&Number(s.reps)>0);
+ if(!valid.length)return "Sugestia: brak kompletnych danych z poprzedniej sesji.";
+ const allTop=valid.length>=ex.sets&&valid.slice(0,ex.sets).every(s=>Number(s.reps)>=ex.max);
+ const maxWeight=Math.max(...valid.map(s=>Number(s.weight)));
+ if(allTop)return `Sugestia: poprzednio wszystkie serie osiągnęły ${ex.max} powt. Rozważ mały wzrost ciężaru (ok. 2–5%), jeśli technika była dobra.`;
+ const avg=Math.round(valid.reduce((a,s)=>a+Number(s.reps),0)/valid.length*10)/10;
+ return `Ostatnio: do ${maxWeight} kg · średnio ${avg} powt. Cel: stopniowo zbliżaj się do ${ex.max} powt. w każdej serii.`;
+}
+function getSessionExercise(ex){if(!session[ex.id]){const prev=latestFor(ex.id);session[ex.id]=Array.from({length:ex.sets},(_,i)=>{const p=prev?.sets?.[i];return{weight:p?.weight??"",reps:"",done:false}})}return session[ex.id]}
+function renderExercises(){const list=document.getElementById("exerciseList"),plan=PLANS[currentPlan];document.getElementById("workoutTitle").textContent=currentPlan;document.getElementById("workoutSubtitle").textContent=`${plan.length} ćwiczeń · ${plan.reduce((n,e)=>n+e.sets,0)} serii roboczych`;
+ list.innerHTML=plan.map(ex=>{const sets=getSessionExercise(ex);return `<article class="exercise" data-ex="${ex.id}"><div class="exercise-top"><div><div class="ex-name">${esc(ex.name)}</div><div class="ex-meta">${ex.sets} serie · ${ex.min}–${ex.max} powt. · przerwa ${ex.rest}s</div></div><button class="btn small ghost" data-rest="${ex.rest}">⏱ ${ex.rest}s</button></div><div class="suggestion">${esc(suggest(ex))}</div><div class="sets"><div class="set-row"><span></span><div class="field-label">Ciężar (kg)</div><div class="field-label">Powtórzenia</div><span></span></div>${sets.map((s,i)=>`<div class="set-row"><span class="set-num">${i+1}</span><input class="field" type="number" min="0" step="0.5" placeholder="kg" aria-label="Ciężar seria ${i+1}" data-i="${i}" data-k="weight" value="${esc(s.weight)}"><input class="field" type="number" min="0" step="1" placeholder="powt." aria-label="Powtórzenia seria ${i+1}" data-i="${i}" data-k="reps" value="${esc(s.reps)}"><button class="check ${s.done?"done":""}" data-done="${i}" aria-label="Zaznacz serię">${s.done?"✓":"○"}</button></div>`).join("")}</div><div class="exercise-footer"><span class="tiny">${sets.filter(s=>s.done).length}/${sets.length} serii wykonanych</span><button class="btn small ghost add-set" data-add="${ex.id}">+ Dodaj serię</button></div></article>`}).join("");
+ list.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{const el=e.target,exId=el.closest(".exercise").dataset.ex;session[exId][Number(el.dataset.i)][el.dataset.k]=el.value}));
+ list.querySelectorAll("[data-done]").forEach(btn=>btn.addEventListener("click",()=>{const exId=btn.closest(".exercise").dataset.ex,i=Number(btn.dataset.done),s=session[exId][i];if(!s.weight||!s.reps){toast("Wpisz ciężar i powtórzenia przed oznaczeniem serii.");return}s.done=!s.done;if(s.done){const ex=PLANS[currentPlan].find(e=>e.id===exId);setTimer(ex.rest)}renderExercises()}));
+ list.querySelectorAll("[data-add]").forEach(btn=>btn.addEventListener("click",()=>{session[btn.dataset.add].push({weight:"",reps:"",done:false});renderExercises()}));
+ list.querySelectorAll("[data-rest]").forEach(btn=>btn.addEventListener("click",()=>setTimer(Number(btn.dataset.rest))));
+}
+function renderStats(){document.getElementById("statWorkouts").textContent=data.workouts.length;document.getElementById("statSets").textContent=data.workouts.reduce((n,w)=>n+w.exercises.reduce((m,e)=>m+e.sets.filter(s=>s.done).length,0),0);document.getElementById("statRecords").textContent=Object.keys(records()).length}
+function renderLastWorkout(){const el=document.getElementById("lastWorkout"),w=data.workouts[0];if(!w){el.className="empty";el.textContent="Brak zapisanych treningów. Zrób pierwszą sesję!";return}el.className="";el.innerHTML=`<div class="history-title"><span>${esc(w.plan)} · ${w.exercises.length} ćwiczeń</span><span class="tiny">${new Date(w.date).toLocaleDateString("pl-PL")}</span></div><div class="tiny" style="margin-top:8px">${w.exercises.reduce((n,e)=>n+e.sets.filter(s=>s.done).length,0)} wykonanych serii</div>`}
+function records(){const out={};data.workouts.forEach(w=>w.exercises.forEach(e=>e.sets.filter(s=>s.done).forEach(s=>{const weight=Number(s.weight),reps=Number(s.reps);if(weight>0&&reps>0){const score=weight*reps;if(!out[e.id]||weight>out[e.id].weight)out[e.id]={name:e.name,weight,reps,score,date:w.date};}})));return out}
+function renderRecords(){const el=document.getElementById("recordsList"),r=Object.values(records()).sort((a,b)=>a.name.localeCompare(b.name,"pl"));el.innerHTML=r.length?r.map(x=>`<div class="record"><div><div>${esc(x.name)}</div><div class="tiny">${x.reps} powt. · ${new Date(x.date).toLocaleDateString("pl-PL")}</div></div><strong>${x.weight} kg</strong></div>`).join(""):'<div class="empty">Rekordy pojawią się po zapisaniu treningów.</div>'}
+function renderHistory(){const el=document.getElementById("historyList");if(!data.workouts.length){el.innerHTML='<div class="empty">Historia jest jeszcze pusta.</div>';return}el.innerHTML=data.workouts.map((w,i)=>`<div class="history-item"><div class="history-title"><span>${esc(w.plan)} · ${dateText(w.date)}</span><button class="btn small danger" data-delete="${i}">Usuń</button></div><div class="tiny" style="margin-top:5px">${w.exercises.map(e=>`${esc(e.name)}: ${e.sets.filter(s=>s.done).map(s=>`${s.weight}×${s.reps}`).join(", ")||"bez serii"}`).join(" · ")}</div></div>`).join("");el.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>{if(confirm("Usunąć ten trening z historii?")){data.workouts.splice(Number(b.dataset.delete),1);persist();drawChart()}}))}
+function populateChartSelect(){const sel=document.getElementById("chartExercise"),old=sel.value;const exercises=[...Object.values(PLANS).flat().reduce((m,e)=>m.set(e.id,e),new Map()).values()];sel.innerHTML=exercises.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join("");if(old)sel.value=old}
+function drawChart(){const canvas=document.getElementById("progressChart");if(!canvas||document.getElementById("progressView").classList.contains("hidden"))return;const ctx=canvas.getContext("2d"),rect=canvas.getBoundingClientRect(),dpr=window.devicePixelRatio||1;canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;ctx.scale(dpr,dpr);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);const id=document.getElementById("chartExercise").value;const pts=data.workouts.slice().reverse().map((wk,i)=>{const ex=wk.exercises.find(e=>e.id===id);if(!ex)return null;const vals=ex.sets.filter(s=>s.done).map(s=>Number(s.weight)).filter(n=>n>0);return vals.length?{x:i,label:new Date(wk.date).toLocaleDateString("pl-PL",{day:"2-digit",month:"2-digit"}),y:Math.max(...vals)}:null}).filter(Boolean);const pad={l:35,r:12,t:15,b:30};if(!pts.length){ctx.fillStyle="#9b9da8";ctx.font="13px sans-serif";ctx.textAlign="center";ctx.fillText("Zapisz trening, aby zobaczyć progres",w/2,h/2);return}const min=Math.min(...pts.map(p=>p.y)),max=Math.max(...pts.map(p=>p.y)),range=Math.max(max-min,5),xstep=(w-pad.l-pad.r)/Math.max(pts.length-1,1);ctx.strokeStyle="#303139";ctx.fillStyle="#9b9da8";ctx.font="10px sans-serif";ctx.textAlign="right";for(let i=0;i<4;i++){const y=pad.t+i*(h-pad.t-pad.b)/3;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();ctx.fillText((max+range*.15-i*(range*1.15/3)).toFixed(1),pad.l-6,y+3)}ctx.strokeStyle="#c6f36a";ctx.lineWidth=2.5;ctx.beginPath();pts.forEach((p,i)=>{const x=pad.l+i*xstep,y=pad.t+(max+range*.15-p.y)/(range*1.3)*(h-pad.t-pad.b);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();pts.forEach((p,i)=>{const x=pad.l+i*xstep,y=pad.t+(max+range*.15-p.y)/(range*1.3)*(h-pad.t-pad.b);ctx.fillStyle="#c6f36a";ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();if(pts.length<=8||i===0||i===pts.length-1){ctx.fillStyle="#9b9da8";ctx.textAlign="center";ctx.fillText(p.label,x,h-8)}})}
+function finishWorkout(){const plan=PLANS[currentPlan],exercises=plan.map(ex=>({id:ex.id,name:ex.name,min:ex.min,max:ex.max,sets:(session[ex.id]||[]).map(s=>({...s,weight:s.weight===""?"":Number(s.weight),reps:s.reps===""?"":Number(s.reps)}))})).filter(e=>e.sets.some(s=>s.done));if(!exercises.length){toast("Oznacz przynajmniej jedną wykonaną serię.");return}data.workouts.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),date:new Date().toISOString(),plan:currentPlan,exercises});persist();session={};renderExercises();toast("Trening zapisany. Dobra robota!");}
+function exportCsv(){const rows=[["data","plan","ćwiczenie","seria","ciężar_kg","powtórzenia","wykonana"]];data.workouts.forEach(w=>w.exercises.forEach(e=>e.sets.forEach((s,i)=>rows.push([w.date,w.plan,e.name,i+1,s.weight,s.reps,s.done]))));const csv="\ufeff"+rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(";")).join("\r\n");saveDownload("ironlog-treningi.csv",csv,"text/csv;charset=utf-8")}
+function setTimer(sec){timerSeconds=sec;timerEnd=null;if(timerInterval){clearInterval(timerInterval);timerInterval=null}document.getElementById("timerStart").textContent="Start";updateTimer()}
+function updateTimer(){const n=Math.max(0,timerEnd?Math.ceil((timerEnd-Date.now())/1000):timerSeconds);document.getElementById("timerDisplay").textContent=`${String(Math.floor(n/60)).padStart(2,"0")}:${String(n%60).padStart(2,"0")}`;if(timerEnd&&n<=0){clearInterval(timerInterval);timerInterval=null;timerEnd=null;document.getElementById("timerStart").textContent="Start";toast("Przerwa zakończona. Wracaj do serii!");}}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x===b));["train","progress","history"].forEach(k=>document.getElementById(k+"View").classList.toggle("hidden",k!==b.dataset.tab));if(b.dataset.tab==="progress")drawChart()}));
+document.getElementById("pushBtn").addEventListener("click",()=>{currentPlan="PUSH";document.getElementById("pushBtn").classList.add("active");document.getElementById("pullBtn").classList.remove("active");renderExercises()});
+document.getElementById("pullBtn").addEventListener("click",()=>{currentPlan="PULL";document.getElementById("pullBtn").classList.add("active");document.getElementById("pushBtn").classList.remove("active");renderExercises()});
+document.getElementById("finishWorkout").addEventListener("click",finishWorkout);
+document.getElementById("resetSession").addEventListener("click",()=>{if(confirm("Wyczyścić bieżące wpisy?")){session={};renderExercises()}});
+document.getElementById("exportJson").addEventListener("click",()=>saveDownload("ironlog-backup.json",JSON.stringify({version:1,exportedAt:new Date().toISOString(),data},null,2),"application/json"));
+document.getElementById("historyExport").addEventListener("click",()=>document.getElementById("exportJson").click());
+document.getElementById("exportCsv").addEventListener("click",exportCsv);
+document.getElementById("importJson").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text()),incoming=obj.data||obj;if(!Array.isArray(incoming.workouts))throw Error("invalid");if(confirm("Import zastąpi obecną historię. Kontynuować?")){data=incoming;persist();session={};renderExercises();drawChart();toast("Kopia została zaimportowana.")}}catch(err){alert("Nie udało się odczytać kopii JSON.")}e.target.value=""});
+document.getElementById("chartExercise").addEventListener("change",drawChart);
+document.getElementById("timerStart").addEventListener("click",()=>{if(timerInterval){clearInterval(timerInterval);timerInterval=null;timerSeconds=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));timerEnd=null;document.getElementById("timerStart").textContent="Start";updateTimer();return}timerEnd=Date.now()+timerSeconds*1000;document.getElementById("timerStart").textContent="Pauza";timerInterval=setInterval(updateTimer,250)});
+document.getElementById("timerReset").addEventListener("click",()=>setTimer(90));
+document.querySelectorAll("[data-seconds]").forEach(b=>b.addEventListener("click",()=>setTimer(Number(b.dataset.seconds))));
+window.addEventListener("resize",drawChart);
+populateChartSelect();renderExercises();renderStats();renderLastWorkout();renderRecords();renderHistory();
+</script>
+</body>
+</html>
